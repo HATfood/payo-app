@@ -183,19 +183,19 @@ async function checkOfflineReadiness(){
 }
 
 let swRegistration=null,applyingUpdate=false,lastUpdateCheck=0;
-function showUpdate(){if(swRegistration?.waiting)$('updateBanner').classList.remove('hidden')}
+function showUpdate(){$('updateBanner').classList.toggle('hidden',!swRegistration?.waiting)}
 async function checkForUpdates(){
  if(!swRegistration||!navigator.onLine||Date.now()-lastUpdateCheck<30000)return;
  lastUpdateCheck=Date.now();try{await swRegistration.update();showUpdate()}catch(e){}
 }
 async function setupUpdates(){
  if(!('serviceWorker' in navigator)){checkOfflineReadiness();return}
- navigator.serviceWorker.addEventListener('controllerchange',()=>{if(applyingUpdate)location.reload();else checkOfflineReadiness()});
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{if(applyingUpdate)location.reload();else{showUpdate();checkOfflineReadiness()}});
  try{
   swRegistration=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
   showUpdate();swRegistration.addEventListener('updatefound',()=>{
    const worker=swRegistration.installing;if(!worker)return;
-   worker.addEventListener('statechange',()=>{if(worker.state==='installed'){showUpdate();if(!navigator.serviceWorker.controller)checkOfflineReadiness()}});
+   worker.addEventListener('statechange',()=>{if(worker.state==='installed'){if(navigator.serviceWorker.controller)showUpdate();else checkOfflineReadiness()}});
   });checkOfflineReadiness();checkForUpdates();
  }catch(e){$('offlineReadiness').textContent='آمادگی آفلاین تأیید نشد؛ اتصال اینترنت را بررسی کنید.'}
 }

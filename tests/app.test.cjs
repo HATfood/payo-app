@@ -58,3 +58,8 @@ test('service worker precaches the bundled font and every required path exists',
  for(const asset of assets)assert.ok(fs.existsSync(path.join(root,asset)),asset);
  assert.match(code,/type==='SKIP_WAITING'/);assert.match(code,/cache:'reload'/);
 });
+
+test('update banner appears only while an update is actually waiting',()=>{
+ const c=app();c.visibility=[];run(c,"document={getElementById:()=>({classList:{toggle:(name,hidden)=>visibility.push(hidden)}})};swRegistration={waiting:null};showUpdate();swRegistration.waiting={};showUpdate();swRegistration.waiting=null;showUpdate()");
+ assert.deepEqual(Array.from(c.visibility),[true,false,true]);
+});

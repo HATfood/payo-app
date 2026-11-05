@@ -1,4 +1,4 @@
-const CACHE='payu-v062-static';
+const CACHE='payu-v062-1-static';
 const ASSETS=["./", "./index.html", "./style.css", "./app.js", "./customers.json", "./options.json", "./form_rules.json", "./legacy_export_schema.json", "./manifest.webmanifest", "./fonts/Vazirmatn-Variable.woff2", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png", "./favicon.png", "./admin.html", "./admin.js", "./admin.css"];
 
 self.addEventListener('install',event=>{
